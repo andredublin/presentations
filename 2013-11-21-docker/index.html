@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Docker Presentation</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Docker</h1>
+					<p>
+            <img src="images/homepage-docker-logo.png" />
+					</p>
+
+					<aside class="notes">Tonight I'm going to introduce you to Docker from dotcloud who recently changed their company name to Docker Inc.</aside>
+				</section>
+
+				<section>
+          <h2>Some Stats</h2>
+          <p>Released around March 2013</p>
+
+          <p>
+            <img width="100%" height="100%" src="images/stats.jpg">
+          </p>
+
+          <aside class="notes">Here are some statistics I picked up from the Docker website, and as you can see Docker is very popular among the community.  I watch the repo to help myself better understand the API and I see some sort of activity on the branch every 15 minutes.</aside>
+				</section>
+
+        <section>
+          <section>
+            <h3>What we'll be covering</h3>
+
+            <ul>
+              <li>Who is docker for?</li>
+              <li>What problems does docker solve?</li>
+              <li>What is a container?</li>
+              <li>Docker 101</li>
+            </ul>
+
+            <aside class="notes">So lets move on to the agenda, I'll be covering these four points, who is docker for, what problems does it solve, whats a container, and a 101 demo. So lets get started!</aside>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Q: Who is docker for?</h3>
+
+            <p>A: Devs</p>
+
+            <ul>
+              <li class="fragment fade-in" data-fragment="0">All languages</li>
+              <li class="fragment fade-in" data-fragment="1">All databases</li>
+              <li class="fragment fade-in" data-fragment="2">All OSes</li>
+              <li class="fragment fade-in" data-fragment="3">Specifically Linux systems</li>
+            </ul>
+
+            <br />
+            <br />
+
+            <p class="fragment fade-in" data-fragment="4">
+              <small>Docker will eventually be able to target FreeBSD, Solaris and maybe OS X.</small>
+            </p>
+
+            <aside class="notes">
+              So who is docker for? Its for developers.
+              Docker gives developers the choice to develop with any software without having to affect their development machine.
+              These docker containers isolate processes from the kernel and creates an environment that they can work in or completely trash.
+              Currently docker is specifically targeted for Linux systems, so mac users (myself included) will have to wait until docker fully supports those platforms (hopefully we'll see this in 1.0).
+            </aside>
+          </section>
+
+          <section>
+            <h3>Q: Who is docker for?</h3>
+
+            <p>A: Server Ops</p>
+
+            <ul>
+              <li class="fragment fade-in" data-fragment="0">Any distribution <small><sup>1</sup></small></li>
+              <li class="fragment fade-in" data-fragment="1">Any cloud <small><sup>2</sup></small></li>
+              <li class="fragment fade-in" data-fragment="2">Any machine (physical, virtual...)</li>
+              <li class="fragment fade-in" data-fragment="3">Recent kernels <small><sup>3</sup></small></li>
+            </ul>
+
+            <br />
+            <br />
+
+            <div style="font-size:20px;">
+              <p class="fragment fade-in" data-fragment="0"><sup>1&nbsp;</sup> as long as it's Ubuntu, Debain, others are on the way (Centos, RHEL, Arch, Fedora, etc)</p>
+              <p class="fragment fade-in" data-fragment="1"><sup>2&nbsp;</sup> as long as they don't ship with a custom kernel</p>
+              <p class="fragment fade-in" data-fragment="2"><sup>3&nbsp;</sup> at least 3.8; support for RHEL 2.6.32 is coming</p>
+            </div>
+
+            <aside class="notes">
+              So who else is docker for? Its for server ops.  A server op wants to setup a container that is arch Linux, then they can do so.
+              Any cloud - Docker on EC2, no problem; on Digital Ocean, no sweat; Rackspace? Docker's got this.
+              Its recommended that docker be run on the latest distribution of a Linux system with kernel 3.8 due to a number of kernel bugs or even crashes that include:
+              a container being killed in the middle of an operation (ex. apt-get doesn't complete);
+              kernel crash causing the machine to freeze for a few minutes, or even completely.
+              Its possible to use older kernels for development, but not recommended.
+              To prevent this from happening, docker will check the kernel version when it starts, and emits a warning if it detects something older than 3.8
+            </aside>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>What problem does docker solve?</h3>
+
+            <aside class="notes">
+              What problems does docker solve?
+              Its hard to think of what containers can help us with as developers and server ops.
+              So lets take a look at an analogy taken from the world of shipping.
+            </aside>
+          </section>
+
+          <section>
+            <h3>A history lesson</h3>
+
+            <img width="100%" height="100%" src="images/analogy.jpg" />
+
+            <aside class="notes">
+              Before 1960, most cargo was shipped break bulk.
+              Shippers and carriers alike needed to worry about bad interactions between different types of cargo.
+              Ex.if a shipment of anvils fell on a crate of watermelons, its funny, but someone will be upset.
+              Also transitions between different modes of transport were painful.
+              Good had to be unloaded from ships and reloaded onto trains, trucks, etc.
+              Along that transition theft and damage were large.
+              So there is an X matrix between good and the types of transport.
+            </aside>
+          </section>
+
+          <section>
+            <h3>A history lesson</h3>
+
+            <img width="100%" height="100%" src="images/standard_container.jpg" />
+
+            <aside class="notes">
+              So the solution was the international shipping container
+              Any type of good can be packaged inside the shipping container, from cars to pianos.
+              The container can then be sealed, and not re-opened until it reaches it final destination.
+              Between that period containers can be loaded, unloaded, stacked, transported, and efficiently moved over long distances.
+              Transfers become automated without modification to the container and everybody's happy.
+            </aside>
+          </section>
+
+          <section>
+            <h3>A container for system code</h3>
+
+            <img width="100%" height="100%" src="images/the_challenge.jpg" />
+
+            <aside class="notes">
+              Developers and server ops face the same challenge.
+              Multiple software packages, frameworks, systems, APIs etc, for multiple VM's servers, developer machines etc.
+              So it can be frustrating sometimes to manage all this without creating shell scripts to manage this.
+              So thats where docker comes in to simplify this by wrapping linux containers in an easy to use software package.
+            </aside>
+          </section>
+
+          <section>
+            <h3>A container for system code</h3>
+
+            <img width="100%" height="100%" src="images/docker_container.jpg" />
+
+            <aside class="notes">Solution to the problem, the Linux container</aside>
+            <aside class="notes">
+              At the same extent Docker can be thought of as an international shipping container system for code.
+              We can now package code, frameworks, databases, systems etc. within a container and ship it to multiple hardware environments.
+              So its these Linux containers are the secret sauce that makes docker tick.
+            </aside>
+          </section>
+
+          <section>
+            <h3>Linux Containers</h3>
+
+            <p>Units of software delivery <b>(ship it!)</b></p>
+
+            <br />
+
+            <ul>
+              <li>
+                Run everywhere
+                <ul>
+                  <li>Regardless of kernel version (*cough 3.8 cough*)</li>
+                  <li>Regardless of host distribution</li>
+                  <li>(*but container and host architecture must match*)</li>
+                </ul>
+              </li>
+              <li>
+                Run anything
+                <ul>
+                  <li>If it can run on the host, it can run in the container</li>
+                  <li>i.e.; If it can run on a Linux kernel, it can run</li>
+                </ul>
+              </li>
+            </ul>
+
+            <br />
+            <br />
+
+            <p><small>*Unless you emulate CPU with qemu and binfmt</small></p>
+
+            <aside class="notes">
+              The beauty of Linux containers is that you can run it practically anywhere on any kernel.
+              And the ability to run whatever you want inside the container without modifying the host environment.
+              So lets get a broad scope of what a container is.
+            </aside>
+          </section>
+        </section>
+
+				<section>
+					<section>
+            <h2>What's a Container</h2>
+
+            <p>From 10,000 feet</p>
+            <p>Its a lightweight VM</p>
+
+            <br />
+
+            <ul>
+              <li>Own process space</li>
+              <li>Own network interface</li>
+              <li>Can run stuff as root</li>
+              <li>Can have its own sbin/init (different from host)</li>
+            </ul>
+
+            <aside class="notes">
+              A container is its own process space.
+              A container is its own network interface.
+              A container can run stuff on its host environment as root.
+              A container has its own init call to start processes within itself.
+              Now lets take a closer look.
+            </aside>
+					</section>
+
+					<section>
+            <h2>What's a Container</h2>
+
+            <p>Looking closer</p>
+            <p>Its chroot on steroids</p>
+
+            <br />
+
+            <ul>
+              <li>Container = isolated process(es)</li>
+              <li>Share kernel with host</li>
+              <li>No device emulation</li>
+            </ul>
+
+            <aside class="notes">
+              Basically its chroot with more bells and whistles. A container is effectively jailed and cannot modify its parent hosting environment, unless the container is elevated as a privileged container.
+              The container uses the same kernel as the host.
+              The container doesn't emulate I/O devices or hardware components
+              Containers allow use to isolate and separate what we want to work with where we want to work with it.
+            </aside>
+					</section>
+
+					<section>
+						<h2>Separations of Concerns</h2>
+
+            <p>For Developers</p>
+
+            <br />
+
+            <ul>
+              <li>
+                Inside my container
+                <ul>
+                  <li>My code</li>
+                  <li>My libraries</li>
+                  <li>My package manager</li>
+                  <li>My app</li>
+                  <li>My data</li>
+                </ul>
+              </li>
+            </ul>
+
+            <aside class="notes">
+              So our developer can write within a development container with their code, libraries, dependency manager, app and data.
+              Then they can ship that off to QA or server ops for testing, or even off to another developer.
+            </aside>
+					</section>
+
+					<section>
+						<h2>Separations of Concerns</h2>
+
+            <p>For Server Ops</p>
+
+            <br />
+
+            <ul>
+              <li>
+                Outside the container
+                <ul>
+                  <li>Logging</li>
+                  <li>Remote access</li>
+                  <li>Network configuration</li>
+                  <li>Monitoring</li>
+                </ul>
+              </li>
+            </ul>
+
+            <aside class="notes">
+              Server Ops can now take the isolated environment and without having to manipulate their own environment proceed with what they do best.
+              Logging, configuring remote access, network configuration and monitoring of the application or software.
+              This I feel is the strong suit of Docker, the separation of concerns among individuals.
+              So how does this all work?
+            </aside>
+					</section>
+
+          <section>
+            <h2>How does it work?</h2>
+
+            <p>Isolation with namespaces</p>
+
+            <br />
+
+            <ul>
+              <li>pid</li>
+              <li>mnt</li>
+              <li>ipc</li>
+              <li>user</li>
+            </ul>
+
+            <aside class="notes">
+              Linux containers isolate these processes using namespaces
+              pid - process id
+              mnt - temporary mount points
+              net - isolates the network interface controller
+              uts - not familiar with, but allow namespaces to change hostnames
+              ipc - interprocess communications between containers
+              user
+
+              Containers also isolate with cgroups
+            </aside>
+          </section>
+
+					<section>
+						<h2>How does it work?</h2>
+
+            <p>Isolation with cgroups</p>
+
+            <br />
+
+            <ul>
+              <li>memory</li>
+              <li>cpu</li>
+              <li>blkio</li>
+              <li>devices</li>
+            </ul>
+
+            <aside class="notes">
+              With cgroups containers can isolate and even limit memory usage, and cpu.
+              blkio - the block io controller that reports or controlls I/O bandwidth for devices.
+              devices - grants or denies access to devices.
+            </aside>
+					</section>
+
+					<section>
+						<h2>How does it work?</h2>
+
+            <p>Copy-on-write storage</p>
+
+            <br />
+
+            <ul>
+              <li>Unioning filesystems (AUFS)</li>
+              <li>Snapshotting filesystems (BRTFS, ZFS)</li>
+              <li>Copy-on-write block devices (thin snapshots with LVM or device-mapper)</li>
+            </ul>
+
+            <aside class="notes">
+              Containers user a unioning filesystem advanced unification filesytem
+            </aside>
+					</section>
+				</section>
+
+        <section>
+          <h3>Docker 101</h3>
+
+          <aside class="notes">
+            CLI Demo
+            Dockerfile Demo
+          </aside>
+        </section>
+
+        <section>
+          <h3>YAGNI</h3>
+
+          <aside class="notes">
+            I can do all this with LXC tools, rsync, and scripts
+            Correct on all accounts, but the same goes for apt, dpkg, yum, rpm, etc.
+            The whole point is to package, to make it easy to use
+            Instead of writing small shell scripts to manage containers, we write them to do the rest. Like deployment/integration/testing and orchestration
+            Use docker as a building block and you can re-use other peoples images
+          </aside>
+        </section>
+
+				<section>
+					<h2>Thank you</h2>
+          <ul>
+            <li>https://github.com/andredublin</li>
+            <li>@andredublin</li>
+          </ul>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
