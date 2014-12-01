@@ -634,6 +634,33 @@ var bob = {
 </section>
   </div>
   <div class="slide hidden" id="slide-19">
+    <section class="slide-content"><h3 id="subclassing">Subclassing</h3>
+<pre><code>// Pseudo-code of Array
+class Array {
+    constructor(...args) { /* ... */ }
+    static [Symbol.create]() {
+        // Install special [[DefineOwnProperty]]
+        // to magically update &#39;length&#39;
+    }
+}
+
+// User code of Array subclass
+class MyArray extends Array {
+    constructor(...args) { super(...args); }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-20">
+    <section class="slide-content"><h3 id="subclassing">Subclassing</h3>
+<pre><code>// Two-phase &#39;new&#39;:
+// 1) Call @@create to allocate object
+// 2) Invoke constructor on new instance
+var arr = new MyArray();
+arr[1] = 12;
+arr.length == 2</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-21">
     <section class="slide-content"><h3 id="enhanced-object-literals">Enhanced Object Literals</h3>
 <pre><code>var obj = {
   // __proto__
@@ -650,7 +677,7 @@ var bob = {
 };</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-20">
+  <div class="slide hidden" id="slide-22">
     <section class="slide-content"><h3 id="template-strings">Template Strings</h3>
 <pre><code>// Basic literal string creation
 `In JavaScript &#39;\n&#39; is a line-feed.`
@@ -671,7 +698,7 @@ GET`http://foo.org/bar?a=${a}&amp;b=${b}
       &quot;bar&quot;: ${bar}}`(myOnReadyStateChangeHandler);</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-21">
+  <div class="slide hidden" id="slide-23">
     <section class="slide-content"><h3 id="destructing">Destructing</h3>
 <pre><code>// list matching
 var [a, , b] = [1,2,3];
@@ -690,7 +717,7 @@ function g({name: x}) {
 g({name: 5})</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-22">
+  <div class="slide hidden" id="slide-24">
     <section class="slide-content"><h3 id="destructing">Destructing</h3>
 <pre><code>// Fail-soft destructuring
 var [a] = [];
@@ -701,11 +728,11 @@ var [a = 1] = [];
 a === 1;</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-23">
+  <div class="slide hidden" id="slide-25">
     <section class="slide-content"><h1 id="default-rest-spread-parameters-arguments">Default + Rest + Spread Parameters &amp; Arguments</h1>
 </section>
   </div>
-  <div class="slide hidden" id="slide-24">
+  <div class="slide hidden" id="slide-26">
     <section class="slide-content"><h3 id="default">Default</h3>
 <pre><code>function f(x, y=12) {
   // y is 12 if not passed (or passed as undefined)
@@ -714,7 +741,7 @@ a === 1;</code></pre>
 f(3) == 15</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-25">
+  <div class="slide hidden" id="slide-27">
     <section class="slide-content"><h3 id="rest">Rest</h3>
 <pre><code>function f(x, ...y) {
   // y is an Array
@@ -723,7 +750,7 @@ f(3) == 15</code></pre>
 f(3, &quot;hello&quot;, true) == 6</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-26">
+  <div class="slide hidden" id="slide-28">
     <section class="slide-content"><h3 id="spread">Spread</h3>
 <pre><code>function f(x, y, z) {
   return x + y + z;
@@ -732,7 +759,7 @@ f(3, &quot;hello&quot;, true) == 6</code></pre>
 f(...[1,2,3]) == 6</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-27">
+  <div class="slide hidden" id="slide-29">
     <section class="slide-content"><h3 id="iterators">Iterators</h3>
 <pre><code>let fibonacci = {
   [Symbol.iterator]() {
@@ -754,7 +781,7 @@ for (var n of fibonacci) {
 }</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-28">
+  <div class="slide hidden" id="slide-30">
     <section class="slide-content"><h3 id="generators">Generators</h3>
 <pre><code>function* argumentsGenerator() {
   for (let i = 0; i &lt; arguments.length; i += 1) {
@@ -772,7 +799,7 @@ console.log(
 );</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-29">
+  <div class="slide hidden" id="slide-31">
     <section class="slide-content"><h3 id="generators">Generators</h3>
 <pre><code>// Prints &quot;a&quot;, &quot;b&quot;, &quot;c&quot;
 for (let value of argumentsIterator) {
@@ -780,7 +807,7 @@ for (let value of argumentsIterator) {
 }</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-30">
+  <div class="slide hidden" id="slide-32">
     <section class="slide-content"><h3 id="generators">Generators</h3>
 <pre><code>function* fibonacci() {
     let a = 0, b = 1;
@@ -797,7 +824,7 @@ for (let value of fibonacci()) {
 }</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-31">
+  <div class="slide hidden" id="slide-33">
     <section class="slide-content"><h3 id="generators">Generators</h3>
 <pre><code>// task.js example
 spawn(function*() {
@@ -818,7 +845,7 @@ try {
 }</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-32">
+  <div class="slide hidden" id="slide-34">
     <section class="slide-content"><h3 id="generators">Generators</h3>
 <pre><code>let delegatedIterator = (function* () {
     yield &#39;Hello!&#39;;
@@ -837,7 +864,7 @@ for(let value of delegatingIterator) {
 }</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-33">
+  <div class="slide hidden" id="slide-35">
     <section class="slide-content"><h3 id="comprehensions">Comprehensions</h3>
 <pre><code>// Array comprehensions
 var results = [
@@ -854,7 +881,7 @@ var results = (
 )</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-34">
+  <div class="slide hidden" id="slide-36">
     <section class="slide-content"><h3 id="unicode">Unicode</h3>
 <pre><code>// same as ES5.1
 &quot;𠮷&quot;.length == 2
@@ -874,7 +901,7 @@ for(var c of &quot;𠮷&quot;) {
 }</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-35">
+  <div class="slide hidden" id="slide-37">
     <section class="slide-content"><h3 id="modules">Modules</h3>
 <pre><code>// lib/math.js
 export function sum(x, y) {
@@ -891,7 +918,7 @@ import {sum, pi} from &quot;lib/math&quot;;
 alert(&quot;2π = &quot; + sum(pi, pi));</code></pre>
 </section>
   </div>
-  <div class="slide hidden" id="slide-36">
+  <div class="slide hidden" id="slide-38">
     <section class="slide-content"><h3 id="modules">Modules</h3>
 <pre><code>// lib/mathplusplus.js
 export * from &quot;lib/math&quot;;
@@ -904,33 +931,6 @@ export default function(x) {
 module math from &quot;lib/mathplusplus&quot;;
 import exp from &quot;lib/mathplusplus&quot;;
 alert(&quot;2π = &quot; + exp(math.pi, math.e));</code></pre>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-37">
-    <section class="slide-content"><h3 id="subclassing">Subclassing</h3>
-<pre><code>// Pseudo-code of Array
-class Array {
-    constructor(...args) { /* ... */ }
-    static [Symbol.create]() {
-        // Install special [[DefineOwnProperty]]
-        // to magically update &#39;length&#39;
-    }
-}
-
-// User code of Array subclass
-class MyArray extends Array {
-    constructor(...args) { super(...args); }
-}</code></pre>
-</section>
-  </div>
-  <div class="slide hidden" id="slide-38">
-    <section class="slide-content"><h3 id="subclassing">Subclassing</h3>
-<pre><code>// Two-phase &#39;new&#39;:
-// 1) Call @@create to allocate object
-// 2) Invoke constructor on new instance
-var arr = new MyArray();
-arr[1] = 12;
-arr.length == 2</code></pre>
 </section>
   </div>
   <div class="slide hidden" id="slide-39">
