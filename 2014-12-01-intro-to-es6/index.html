@@ -1,0 +1,1241 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Intro to ECMAScript 6</title>
+  <style type="text/css">
+    body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #222;
+  background-color: #f7f7f7;
+  font-size: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+
+.slide-content {
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  margin: 80px auto 0 auto;
+  padding: 30px;
+
+  font-weight: 200;
+  font-size: 200%;
+  line-height: 1.375;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.arrow {
+  width: 0; height: 0;
+  border: 30px solid #333;
+  float: left;
+  margin-right: 30px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+
+  border-left-width: 0;
+  border-right-width: 50px;
+}
+
+.next {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+
+  border-left-width: 50px;
+  border-right-width: 0;
+}
+
+.prev:hover {
+  border-right-color: #888;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-left-color: #888;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 300%;
+  line-height: 1.2;
+  text-align: center;
+  margin: 170px 0 0;
+}
+
+h2 {
+  font-size: 100%;
+  line-height: 1.2;
+  margin: 5px 0;
+  text-align: center;
+  font-weight: 200;
+}
+
+h3 {
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px solid #aaa;
+  margin: 0;
+  padding-bottom: 15px;
+}
+
+ul {
+  padding: 20px 0 0 60px;
+  font-weight: 200;
+  line-height: 1.375;
+}
+
+.author h1 {
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.author h3 {
+  font-weight: 100;
+  text-align: center;
+  font-size: 95%;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+  color: #44a4dd;
+}
+
+a:hover {
+  color: #66b5ff;
+}
+
+pre {
+  font-size: 60%;
+  line-height: 1.3;
+}
+
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 3px;
+  background-color: #b4b4b4;
+
+  -webkit-transition: width 0.05s ease-out;
+  -moz-transition: width 0.05s ease-out;
+  -o-transition: width 0.05s ease-out;
+  transition: width 0.05s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 850px) {
+
+  body {
+    font-size: 70%;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1 {
+    margin-top: 120px;
+  }
+
+  .prev, .prev:hover {
+    border-right-color: rgba(135, 135, 135, 0.5);
+  }
+
+  .next, .next:hover {
+    border-left-color: rgba(135, 135, 135, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 50%;
+    overflow: hidden;
+  }
+
+  .slide-content {
+    padding: 10px;
+    margin-top: 10px;
+    height: 340px;
+  }
+
+  h1 {
+    margin-top: 50px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    border: 1px solid #222;
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+  }
+
+  .slide:nth-child(even) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
+/*
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+*/
+
+code, pre {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: auto;
+  padding: 6px 10px;
+}
+
+code {
+  padding: 0 5px;
+}
+
+pre>code {
+  margin: 0; padding: 0;
+  border: none;
+  background: transparent;
+}
+
+pre .comment,
+pre .template_comment,
+pre .diff .header,
+pre .javadoc {
+  color: #998;
+  font-style: italic
+}
+
+pre .keyword,
+pre .css .rule .keyword,
+pre .winutils,
+pre .javascript .title,
+pre .nginx .title,
+pre .subst,
+pre .request,
+pre .status {
+  color: #333;
+  font-weight: bold
+}
+
+pre .number,
+pre .hexcolor,
+pre .ruby .constant {
+  color: #099;
+}
+
+pre .string,
+pre .tag .value,
+pre .phpdoc,
+pre .tex .formula {
+  color: #d14
+}
+
+pre .title,
+pre .id {
+  color: #900;
+  font-weight: bold
+}
+
+pre .javascript .title,
+pre .lisp .title,
+pre .clojure .title,
+pre .subst {
+  font-weight: normal
+}
+
+pre .class .title,
+pre .haskell .type,
+pre .vhdl .literal,
+pre .tex .command {
+  color: #458;
+  font-weight: bold
+}
+
+pre .tag,
+pre .tag .title,
+pre .rules .property,
+pre .django .tag .keyword {
+  color: #000080;
+  font-weight: normal
+}
+
+pre .attribute,
+pre .variable,
+pre .lisp .body {
+  color: #008080
+}
+
+pre .regexp {
+  color: #009926
+}
+
+pre .class {
+  color: #458;
+  font-weight: bold
+}
+
+pre .symbol,
+pre .ruby .symbol .string,
+pre .lisp .keyword,
+pre .tex .special,
+pre .prompt {
+  color: #990073
+}
+
+pre .built_in,
+pre .lisp .title,
+pre .clojure .built_in {
+  color: #0086b3
+}
+
+pre .preprocessor,
+pre .pi,
+pre .doctype,
+pre .shebang,
+pre .cdata {
+  color: #999;
+  font-weight: bold
+}
+
+pre .deletion {
+  background: #fdd
+}
+
+pre .addition {
+  background: #dfd
+}
+
+pre .diff .change {
+  background: #0086b3
+}
+
+pre .chunk {
+  color: #aaa
+}
+
+body {
+  background-color: #222;
+  color: #eee;
+}
+
+h1, h3 {
+  font-family: Impact;
+  font-weight: bold;
+  font-style: italic;
+}
+
+pre code {
+  color: #ccc;
+  font-size: 140%;
+}
+
+.keyword {
+  color: #0086b3 !important;
+  font-weight: inherit !important;
+}
+
+.tag {
+  color: #900 !important;
+}
+
+code {
+  background-color: inherit;
+}
+
+em {
+  border-bottom: 1px solid #666;
+}
+
+  </style>
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="slide" id="slide-1">
+    <section class="slide-content"><h1 id="intro-to-ecmascript-6">Intro to ECMAScript 6</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-2">
+    <section class="slide-content"><h3 id="javascript-is-everywhere-">JavaScript is everywhere!</h3>
+<ul>
+<li>Where: browsers, servers, devices.</li>
+<li>Problem: Used for much more than it was created for.</li>
+<li>How: Making it better with the ES5 and ES6 standards.</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-3">
+    <section class="slide-content"><h3 id="this-talk">This talk</h3>
+<ul>
+<li>Background.</li>
+<li>Goals.</li>
+<li>Features for nodejs.</li>
+<li>Features for the future.</li>
+<li>When/How can I use it?</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-4">
+    <section class="slide-content"><h3 id="background">Background</h3>
+<ul>
+<li>TC39 (Ecma Technical Committee 39): the committee evolving JavaScript.<ul>
+<li>Members: companies ( all major browser vendors etc. ).</li>
+<li>Meetgins attended by employees and invited experts.</li>
+</ul>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-5">
+    <section class="slide-content"><h3 id="background">Background</h3>
+<ul>
+<li>ECMAScript: the offical name of the language<ul>
+<li>Versions: ECMAScript 5 is short for &quot;ECMAScript Language Specification, Edition 5&quot;</li>
+</ul>
+</li>
+<li>JavaScript:<ul>
+<li>Informally, the language.</li>
+<li>Formally, one implementation of ECMAScript.</li>
+</ul>
+</li>
+<li>ECMAScript Harmony:<ul>
+<li>Improvements after ECMAScript 5 (ECMAScript 6 and 7)</li>
+</ul>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-6">
+    <section class="slide-content"><h3 id="goals">Goals</h3>
+<ul>
+<li>Make JavaScript better.</li>
+<li>For complex applications.</li>
+<li>For libraries.</li>
+<li>As a target for code generators.</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-7">
+    <section class="slide-content"><h3 id="features-for-nodejs">Features for nodejs</h3>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-8">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>function foobar(x, y) {
+  if (x &gt; y) {
+    var tmp = x;
+    x = y;
+    y = tmp;
+  }
+  console.log(tmp === x); // true
+
+  return [x,y];
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-9">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>function foobar(x, y) {
+  if (x &gt; y) {
+    let tmp = x;
+    x = y;
+    y = tmp;
+  }
+  console.log(tmp === x); // ReferenceError: tmp is not defined
+
+  return [x,y];
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-10">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>var login = (function foobar() {
+  var privateKey = Math.random();
+
+  return function(password) {
+    return password === privateKey;
+  };
+}());
+
+login();</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-11">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>function foobar() {
+  let privateKey = Math.random();
+
+  var login = function(password) {
+    return password === privateKey;
+  };
+}
+
+foobar();</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-12">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>function foobar() { console.log(&#39;I am outside!&#39;); }
+(function () {
+  if(false) {
+    // What should happen with this redeclaration?
+    function foobar() { console.log(&#39;I am inside!&#39;); }
+  }
+
+  foobar();
+}());</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-13">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>const a = &#39;You shall remain constant!&#39;;
+
+a = &#39;I wanna be free!&#39;; // SyntaxError: Assignment to constant variable</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-14">
+    <section class="slide-content"><h3 id="block-scoping">Block scoping</h3>
+<pre><code>{
+    let a;
+    let a; // SyntaxError: Variable &#39;a&#39; has already been declared
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-15">
+    <section class="slide-content"><h3 id="arrows">Arrows</h3>
+<pre><code>// Expression bodies
+var odds = evens.map(v =&gt; v + 1);
+var nums = evens.map((v, i) =&gt; v + i);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-16">
+    <section class="slide-content"><h3 id="arrows">Arrows</h3>
+<pre><code>// Statement bodies
+nums.forEach(v =&gt; {
+  if (v % 5 === 0)
+    fives.push(v);
+});</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-17">
+    <section class="slide-content"><h3 id="arrows">Arrows</h3>
+<pre><code>// Lexical this
+var bob = {
+  _name: &quot;Bob&quot;,
+  _friends: [],
+  printFriends() {
+    this._friends.forEach(f =&gt;
+      console.log(this._name + &quot; knows &quot; + f)
+    );
+  }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-18">
+    <section class="slide-content"><h3 id="classes">Classes</h3>
+<pre><code>class SkinnedMesh extends THREE.Mesh {
+  constructor(geometry, materials) {
+    super(geometry, materials);
+
+    this.idMatrix = SkinnedMesh.defaultMatrix();
+    this.bones = [];
+    this.boneMatrices = [];
+  }
+
+  update(camera) {
+    super.update();
+  }
+
+  static defaultMatrix() {
+    return new THREE.Matrix4();
+  }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-19">
+    <section class="slide-content"><h3 id="enhanced-object-literals">Enhanced Object Literals</h3>
+<pre><code>var obj = {
+  // __proto__
+  __proto__: theProtoObj,
+  // Shorthand for ‘handler: handler’
+  handler,
+  // Methods
+  toString() {
+    // Super calls
+    return &quot;d &quot; + super.toString();
+  },
+  // Computed (dynamic) property names
+  [ &#39;prop_&#39; + (() =&gt; 42)() ]: 42
+};</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-20">
+    <section class="slide-content"><h3 id="template-strings">Template Strings</h3>
+<pre><code>// Basic literal string creation
+`In JavaScript &#39;\n&#39; is a line-feed.`
+
+// Multiline strings
+`In JavaScript this is
+not legal.`
+
+// Construct a DOM query
+var name = &quot;Bob&quot;, time = &quot;today&quot;;
+`Hello ${name}, how are you ${time}?`
+
+// Construct an HTTP request prefix is used to interpret the replacements and construction
+GET`http://foo.org/bar?a=${a}&amp;b=${b}
+    Content-Type: application/json
+    X-Credentials: ${credentials}
+    { &quot;foo&quot;: ${foo},
+      &quot;bar&quot;: ${bar}}`(myOnReadyStateChangeHandler);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-21">
+    <section class="slide-content"><h3 id="destructing">Destructing</h3>
+<pre><code>// list matching
+var [a, , b] = [1,2,3];
+
+// object matching
+var { op: a, lhs: { op: b }, rhs: c } = getASTNode()
+
+// object matching shorthand
+// binds `op`, `lhs` and `rhs` in scope
+var {op, lhs, rhs} = getASTNode()
+
+// Can be used in parameter position
+function g({name: x}) {
+  console.log(x);
+}
+g({name: 5})</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-22">
+    <section class="slide-content"><h3 id="destructing">Destructing</h3>
+<pre><code>// Fail-soft destructuring
+var [a] = [];
+a === undefined;
+
+// Fail-soft destructuring with defaults
+var [a = 1] = [];
+a === 1;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-23">
+    <section class="slide-content"><h1 id="default-rest-spread-parameters-arguments">Default + Rest + Spread Parameters &amp; Arguments</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-24">
+    <section class="slide-content"><h3 id="default">Default</h3>
+<pre><code>function f(x, y=12) {
+  // y is 12 if not passed (or passed as undefined)
+  return x + y;
+}
+f(3) == 15</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-25">
+    <section class="slide-content"><h3 id="rest">Rest</h3>
+<pre><code>function f(x, ...y) {
+  // y is an Array
+  return x * y.length;
+}
+f(3, &quot;hello&quot;, true) == 6</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-26">
+    <section class="slide-content"><h3 id="spread">Spread</h3>
+<pre><code>function f(x, y, z) {
+  return x + y + z;
+}
+// Pass each elem of array as argument
+f(...[1,2,3]) == 6</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-27">
+    <section class="slide-content"><h3 id="iterators">Iterators</h3>
+<pre><code>let fibonacci = {
+  [Symbol.iterator]() {
+    let pre = 0, cur = 1;
+    return {
+      next() {
+        [pre, cur] = [cur, pre + cur];
+        return { done: false, value: cur }
+      }
+    }
+  }
+}
+
+for (var n of fibonacci) {
+  // truncate the sequence at 1000
+  if (n &gt; 1000)
+    break;
+  print(n);
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-28">
+    <section class="slide-content"><h3 id="generators">Generators</h3>
+<pre><code>function* argumentsGenerator() {
+  for (let i = 0; i &lt; arguments.length; i += 1) {
+    yield arguments[i];
+  }
+}
+
+var argumentsIterator = argumentsGenerator(&#39;a&#39;, &#39;b&#39;, &#39;c&#39;);
+
+// Prints &quot;a b c&quot;
+console.log(
+  argumentsIterator.next().value,
+  argumentsIterator.next().value,
+  argumentsIterator.next().value
+);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-29">
+    <section class="slide-content"><h3 id="generators">Generators</h3>
+<pre><code>// Prints &quot;a&quot;, &quot;b&quot;, &quot;c&quot;
+for (let value of argumentsIterator) {
+  console.log(value);
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-30">
+    <section class="slide-content"><h3 id="generators">Generators</h3>
+<pre><code>function* fibonacci() {
+    let a = 0, b = 1;
+
+    while(true) {
+      yield a;
+      [a, b] = [b, a + b];
+    }
+}
+
+// Enumerates the Fibonacci numbers
+for (let value of fibonacci()) {
+  console.log(value);
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-31">
+    <section class="slide-content"><h3 id="generators">Generators</h3>
+<pre><code>// task.js example
+spawn(function*() {
+  var data = yield $.ajax(url);
+    $(&#39;#result&#39;).html(data);
+    var status = $(&#39;#status&#39;).html(&#39;Download complete.&#39;);
+    yield status.fadeIn().promise();
+    yield sleep(2000);
+    status.fadeOut();
+});
+
+try {
+  let result = spwan().next().value; // yields the promise object
+  spawn().next();
+  // do something with result
+} catch {
+  // clean up
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-32">
+    <section class="slide-content"><h3 id="generators">Generators</h3>
+<pre><code>let delegatedIterator = (function* () {
+    yield &#39;Hello!&#39;;
+    yield &#39;Bye!&#39;;
+}());
+
+let delegatingIterator = (function* () {
+    yield &#39;Greetings!&#39;;
+    yield* delegatedIterator;
+    yield &#39;Ok, bye.&#39;;
+}());
+
+// Prints &quot;Greetings!&quot;, &quot;Hello!&quot;, &quot;Bye!&quot;, &quot;Ok, bye.&quot;
+for(let value of delegatingIterator) {
+  console.log(value);
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-33">
+    <section class="slide-content"><h3 id="comprehensions">Comprehensions</h3>
+<pre><code>// Array comprehensions
+var results = [
+  for(c of customers)
+    if (c.city == &quot;Seattle&quot;)
+      { name: c.name, age: c.age }
+]
+
+// Generator comprehensions
+var results = (
+  for(c of customers)
+    if (c.city == &quot;Seattle&quot;)
+      { name: c.name, age: c.age }
+)</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-34">
+    <section class="slide-content"><h3 id="unicode">Unicode</h3>
+<pre><code>// same as ES5.1
+&quot;𠮷&quot;.length == 2
+
+// new RegExp behaviour, opt-in ‘u’
+&quot;𠮷&quot;.match(/./u)[0].length == 2
+
+// new form
+&quot;\u{20BB7}&quot;==&quot;𠮷&quot;==&quot;\uD842\uDFB7&quot;
+
+// new String ops
+&quot;𠮷&quot;.codePointAt(0) == 0x20BB7
+
+// for-of iterates code points
+for(var c of &quot;𠮷&quot;) {
+  console.log(c);
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-35">
+    <section class="slide-content"><h3 id="modules">Modules</h3>
+<pre><code>// lib/math.js
+export function sum(x, y) {
+  return x + y;
+}
+export var pi = 3.141593;
+
+// app.js
+module math from &quot;lib/math&quot;;
+alert(&quot;2π = &quot; + math.sum(math.pi, math.pi));
+
+// otherApp.js
+import {sum, pi} from &quot;lib/math&quot;;
+alert(&quot;2π = &quot; + sum(pi, pi));</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-36">
+    <section class="slide-content"><h3 id="modules">Modules</h3>
+<pre><code>// lib/mathplusplus.js
+export * from &quot;lib/math&quot;;
+export var e = 2.71828182846;
+export default function(x) {
+  return Math.exp(x);
+}
+
+// app.js
+module math from &quot;lib/mathplusplus&quot;;
+import exp from &quot;lib/mathplusplus&quot;;
+alert(&quot;2π = &quot; + exp(math.pi, math.e));</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-37">
+    <section class="slide-content"><h3 id="subclassing">Subclassing</h3>
+<pre><code>// Pseudo-code of Array
+class Array {
+    constructor(...args) { /* ... */ }
+    static [Symbol.create]() {
+        // Install special [[DefineOwnProperty]]
+        // to magically update &#39;length&#39;
+    }
+}
+
+// User code of Array subclass
+class MyArray extends Array {
+    constructor(...args) { super(...args); }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-38">
+    <section class="slide-content"><h3 id="subclassing">Subclassing</h3>
+<pre><code>// Two-phase &#39;new&#39;:
+// 1) Call @@create to allocate object
+// 2) Invoke constructor on new instance
+var arr = new MyArray();
+arr[1] = 12;
+arr.length == 2</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-39">
+    <section class="slide-content"><h3 id="maps-and-sets">Maps and Sets</h3>
+<pre><code>const people = [
+  {name: &#39;Douglas Crockford&#39;},
+  {name: &#39;Remy Sharp&#39;},
+  {name: &#39;Gary Bernhardt&#39;}
+];
+
+let books = new Map();
+
+books.set(people[0], &#39;JavaScript the Good Parts&#39;);
+books.set(people[1], &#39;Introduction to HTML5&#39;);
+books.set(people[2], &#39;Wat?&#39;);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-40">
+    <section class="slide-content"><h3 id="maps-and-sets">Maps and Sets</h3>
+<pre><code>let colorsArray = [&#39;red&#39;, &#39;orange&#39;, &#39;green&#39;, &#39;blue&#39;, &#39;red&#39;, &#39;green&#39;];
+
+let colors = new Set();
+colorsArray.forEach(function (color) {
+  colors.add(color);
+});
+console.log(colors); // &#39;red&#39;, &#39;orange&#39;, &#39;green&#39;, &#39;blue&#39;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-41">
+    <section class="slide-content"><h3 id="weakmap">Weakmap</h3>
+<pre><code>let weakMap = WeakMap();
+
+// This is effectively a noop, the key-value pair can immediately be garbage collected
+weakMap.set({}, &#39;noise&#39;);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-42">
+    <section class="slide-content"><h3 id="weakmap">Weakmap</h3>
+<pre><code>// Expose user metadata to the rest of the program
+let userMetadata = WeakMap();
+
+server.on(&#39;userConnect&#39;, function (user) {
+  userMetadata.set(user, { connectionTime: Date.now() });
+
+  server.on(&#39;userDisconnect&#39;, function () {
+    // Do stuff with `user` and discard of it, automatically discarding `userMetadata`
+  });
+});</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-43">
+    <section class="slide-content"><h3 id="weakmap">Weakmap</h3>
+<p><img src="./weakmap.jpg" alt=""></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-44">
+    <section class="slide-content"><h3 id="weakmap">Weakmap</h3>
+<pre><code>let weakMap = WeakMap();
+
+// TypeError: Invalid value used as weak map key
+weakMap.set(&#39;example string literal&#39;, 0);</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-45">
+    <section class="slide-content"><h3 id="proxies">Proxies</h3>
+<pre><code>// Proxying a normal object
+var target = {};
+var handler = {
+  get: function (receiver, name) {
+    return `Hello, ${name}!`;
+  }
+};
+
+var p = new Proxy(target, handler);
+p.world === &#39;Hello, world!&#39;;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-46">
+    <section class="slide-content"><h3 id="proxies">Proxies</h3>
+<pre><code>// Proxying a function object
+var target = function () { return &#39;I am the target&#39;; };
+var handler = {
+  apply: function (receiver, ...args) {
+    return &#39;I am the proxy&#39;;
+  }
+};
+
+var p = new Proxy(target, handler);
+p() === &#39;I am the proxy&#39;;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-47">
+    <section class="slide-content"><h3 id="symbols">Symbols</h3>
+<pre><code>var a = {};
+a[&#39;debugSymbol&#39;] = &#39;This property value is identified by a symbol&#39;;
+
+let a = {};
+let debugSymbol = Symbol();
+
+a[debugSymbol] = &#39;This property value is identified by a symbol&#39;;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-48">
+    <section class="slide-content"><h3 id="tail-calls">Tail Calls</h3>
+<pre><code>function factorial(n, acc = 1) {
+    &#39;use strict&#39;;
+    if (n &lt;= 1) return acc;
+    return factorial(n - 1, n * acc);
+}
+
+// Stack overflow in most implementations today,
+// but safe on arbitrary inputs in eS6
+factorial(100000)</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-49">
+    <section class="slide-content"><h3 id="promises">Promises</h3>
+<pre><code>function timeout(duration = 0) {
+    return new Promise((resolve, reject) =&gt; {
+        setTimeout(resolve, duration);
+    })
+}
+
+var p = timeout(1000).then(() =&gt; {
+    return timeout(2000);
+}).then(() =&gt; {
+    throw new Error(&quot;hmm&quot;);
+}).catch(err =&gt; {
+    return Promise.all([timeout(100), timeout(200)]);
+})</code></pre>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-50">
+    <section class="slide-content"><h1 id="thank-you">Thank you</h1>
+<p align="center" style="font-style:italic">
+Fin
+</p></section>
+  </div>
+  <div class="slide hidden" id="slide-51">
+    <section class="slide-content"><div class="author">
+  <h1 class="name">Andre Dublin</h1>
+    <h3 class="twitter">
+      <a href="http://twitter.com/@andredublin">@andredublin</a>
+    </h3>
+    <h3 class="url">
+      <a href="andredublin.github.io">andredublin.github.io</a>
+    </h3>
+</div>
+</section>
+  </div>
+
+  <div class="controls">
+    <div class="arrow prev"></div>
+    <div class="arrow next"></div>
+  </div>
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  /* Positions are 1-indexed, so we need to add and subtract 1 */
+  var nextPosition = (position - 1 + n) % numSlides + 1;
+
+  /* Normalize nextPosition in-case of a negative modulo result */
+  nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+  document.getElementById('slide-' + position).classList.add('hidden');
+  document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+  updateProgress();
+  updateURL();
+  updateTabIndex();
+}
+
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  window.history.replaceState({} , null, '#' + currentPosition());
+}
+
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+         document.mozFullScreenElement ||
+         document.webkitFullscreenElement ||
+         document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+      docElem.requestFullscreen ||
+      docElem.msRequestFullscreen ||
+      docElem.mozRequestFullScreen ||
+      docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+      doc.exitFullscreen ||
+      doc.msExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function (e) {
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function (e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function (e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+});
+
+
+  </script>
+</body>
+</html>
