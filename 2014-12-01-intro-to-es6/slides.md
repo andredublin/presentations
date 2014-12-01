@@ -24,9 +24,8 @@ output: index.html
 
 * Background.
 * Goals.
-* Features for nodejs.
-* Features for the future.
-* When/How can I use it?
+* Whats new?
+* When and how can I use it?
 
 --
 
@@ -645,7 +644,7 @@ output: index.html
 
     // Stack overflow in most implementations today,
     // but safe on arbitrary inputs in eS6
-    factorial(100000)
+    factorial(100000);
 
 --
 
@@ -663,7 +662,15 @@ output: index.html
         throw new Error("hmm");
     }).catch(err => {
         return Promise.all([timeout(100), timeout(200)]);
-    })
+    });
+
+--
+
+### When and how can I use it?
+
+<p align="center">
+![](./acb.jpg)
+</p>
 
 --
 
